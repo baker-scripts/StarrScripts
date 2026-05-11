@@ -6,17 +6,17 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ENV_PATH="$SCRIPT_DIR/.env"
 if [ -f "$ENV_PATH" ]; then
-    # shellcheck source=.env
-    echo "Loading environment variables from $ENV_PATH file"
-    # shellcheck disable=SC1090 # shellcheck sucks
-    if source "$ENV_PATH"; then
-        echo "Environment variables loaded successfully"
-    else
-        echo "Error loading environment variables" >&2
-        exit 1
-    fi
+  # shellcheck source=.env
+  echo "Loading environment variables from $ENV_PATH file"
+  # shellcheck disable=SC1090 # shellcheck sucks
+  if source "$ENV_PATH"; then
+    echo "Environment variables loaded successfully"
+  else
+    echo "Error loading environment variables" >&2
+    exit 1
+  fi
 else
-    echo ".env file not found in script directory ($ENV_PATH)"
+  echo ".env file not found in script directory ($ENV_PATH)"
 fi
 
 # Default Variables
@@ -30,52 +30,52 @@ JDUPES_INCLUDE_EXT=${JDUPES_INCLUDE_EXT:-"mp4,mkv,avi"}
 DEBUG=${DEBUG:-"false"}
 
 find_duplicates() {
-    local log_file="$JDUPES_OUTPUT_LOG"
-    local start_time
-    start_time=$(date +%s)
-    echo "[$(date +"%Y-%m-%d %H:%M:%S")] Duplicate search started" | tee -a "$log_file"
+  local log_file="$JDUPES_OUTPUT_LOG"
+  local start_time
+  start_time=$(date +%s)
+  echo "[$(date +"%Y-%m-%d %H:%M:%S")] Duplicate search started" | tee -a "$log_file"
 
-    if [ "$DEBUG" == "true" ]; then
-        echo "Running jdupes with:" | tee -a "$log_file"
-        echo "$JDUPES_COMMAND $JDUPES_EXCLUDE_DIRS -X onlyext:$JDUPES_INCLUDE_EXT -r -M -y $JDUPES_HASH_DB $JDUPES_SOURCE_DIR $JDUPES_DESTINATION_DIR" | tee -a "$log_file"
-    fi
+  if [ "$DEBUG" == "true" ]; then
+    echo "Running jdupes with:" | tee -a "$log_file"
+    echo "$JDUPES_COMMAND $JDUPES_EXCLUDE_DIRS -X onlyext:$JDUPES_INCLUDE_EXT -r -M -y $JDUPES_HASH_DB $JDUPES_SOURCE_DIR $JDUPES_DESTINATION_DIR" | tee -a "$log_file"
+  fi
 
-    local results
+  local results
+  # shellcheck disable=SC2086
+  results=$("$JDUPES_COMMAND" $JDUPES_EXCLUDE_DIRS -X onlyext:"$JDUPES_INCLUDE_EXT" -r -M -y "$JDUPES_HASH_DB" "$JDUPES_SOURCE_DIR" "$JDUPES_DESTINATION_DIR")
+
+  if [[ $results != *"No duplicates found."* ]]; then
     # shellcheck disable=SC2086
-    results=$("$JDUPES_COMMAND" $JDUPES_EXCLUDE_DIRS -X onlyext:"$JDUPES_INCLUDE_EXT" -r -M -y "$JDUPES_HASH_DB" "$JDUPES_SOURCE_DIR" "$JDUPES_DESTINATION_DIR")
+    "$JDUPES_COMMAND" $JDUPES_EXCLUDE_DIRS -X onlyext:"$JDUPES_INCLUDE_EXT" -r -L -y "$JDUPES_HASH_DB" "$JDUPES_SOURCE_DIR" "$JDUPES_DESTINATION_DIR" >>"$log_file"
+  fi
 
-    if [[ $results != *"No duplicates found."* ]]; then
-        # shellcheck disable=SC2086
-        "$JDUPES_COMMAND" $JDUPES_EXCLUDE_DIRS -X onlyext:"$JDUPES_INCLUDE_EXT" -r -L -y "$JDUPES_HASH_DB" "$JDUPES_SOURCE_DIR" "$JDUPES_DESTINATION_DIR" >>"$log_file"
-    fi
+  if [ "$DEBUG" == "true" ]; then
+    echo -e "jdupes output: ${results}" | tee -a "$log_file"
+  fi
 
-    if [ "$DEBUG" == "true" ]; then
-        echo -e "jdupes output: ${results}" | tee -a "$log_file"
-    fi
-
-    parse_jdupes_output "$results" "$log_file"
-    local finish_time
-    finish_time=$(date +%s)
-    local run_time=$((finish_time - start_time))
-    echo "[$(date +"%Y-%m-%d %H:%M:%S")] Duplicate search completed in ${run_time}s" | tee -a "$log_file"
+  parse_jdupes_output "$results" "$log_file"
+  local finish_time
+  finish_time=$(date +%s)
+  local run_time=$((finish_time - start_time))
+  echo "[$(date +"%Y-%m-%d %H:%M:%S")] Duplicate search completed in ${run_time}s" | tee -a "$log_file"
 }
 
 parse_jdupes_output() {
-    local results="$1"
-    local log_file="$2"
+  local results="$1"
+  local log_file="$2"
 
-    if [[ $results != *"No duplicates found."* ]]; then
-        field_message="❌ Unlinked files discovered..."
-        parsed_log=$(echo "$results" | awk -F/ '{print $NF}' | sort -u)
-    else
-        field_message="✅ No unlinked files discovered..."
-        parsed_log="No hardlinks created"
-    fi
+  if [[ $results != *"No duplicates found."* ]]; then
+    field_message="❌ Unlinked files discovered..."
+    parsed_log=$(echo "$results" | awk -F/ '{print $NF}' | sort -u)
+  else
+    field_message="✅ No unlinked files discovered..."
+    parsed_log="No hardlinks created"
+  fi
 
-    if [ "$DEBUG" == "true" ]; then
-        echo -e "$field_message" | tee -a "$log_file"
-        echo -e "Parsed log: ${parsed_log}" | tee -a "$log_file"
-    fi
+  if [ "$DEBUG" == "true" ]; then
+    echo -e "$field_message" | tee -a "$log_file"
+    echo -e "Parsed log: ${parsed_log}" | tee -a "$log_file"
+  fi
 }
 
 find_duplicates
