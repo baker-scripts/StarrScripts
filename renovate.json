@@ -1,0 +1,20 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Inlined house Renovate config — self-contained, public presets only.",
+  "extends": ["config:best-practices", ":dependencyDashboard", ":semanticCommits", ":enableVulnerabilityAlertsWithLabel(security)"],
+  "schedule": ["before 6am on sunday"],
+  "timezone": "America/Chicago",
+  "prHourlyLimit": 2, "prConcurrentLimit": 4,
+  "labels": ["dependencies", "renovate"],
+  "rangeStrategy": "bump", "separateMajorMinor": true, "separateMinorPatch": false,
+  "automerge": false, "platformAutomerge": false, "rebaseWhen": "behind-base-branch",
+  "branchPrefix": "renovate/", "ignoreDeps": [],
+  "vulnerabilityAlerts": {"labels": ["security"], "schedule": ["at any time"], "automerge": true},
+  "packageRules": [
+    {"description": "Group GHA minor/patch/digest — automerge when CI green", "matchManagers": ["github-actions"], "matchUpdateTypes": ["minor","patch","digest","pin","pinDigest"], "groupName": "github-actions", "groupSlug": "github-actions", "semanticCommitType": "chore", "automerge": true},
+    {"description": "GitHub Actions major — hold for review", "matchManagers": ["github-actions"], "matchUpdateTypes": ["major"], "automerge": false, "addLabels": ["review-required"]},
+    {"description": "Any major — hold for review", "matchUpdateTypes": ["major"], "automerge": false, "addLabels": ["major","review-required"]}
+  ],
+  "lockFileMaintenance": {"enabled": true, "schedule": ["before 6am on sunday"], "automerge": true, "automergeType": "branch"},
+  "recreateWhen": "auto"
+}
