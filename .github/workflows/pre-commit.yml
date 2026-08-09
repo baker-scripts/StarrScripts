@@ -9,4 +9,4 @@ name: Pre-commit
 
 jobs:
   pre-commit:
-    uses: Baker-scripts/.github/.github/workflows/pre-commit.yml@af71b62edc8f3b7abde8a82936a32a051abd5c36 # main
+    uses: Baker-scripts/.github/.github/workflows/pre-commit.yml@cd40dc48857fee91733e6c6045a86ddba0579dfe # main
