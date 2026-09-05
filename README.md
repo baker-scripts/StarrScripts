@@ -1,5 +1,7 @@
 # StarrScripts
 
+[![ShellCheck](https://github.com/baker-scripts/StarrScripts/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/baker-scripts/StarrScripts/actions/workflows/shellcheck.yml)
+
 A curated collection of scripts to optimize and manage various functions related to Starr applications and associated tools.
 Occasionally holds random useful scripts as well.
 These scripts are designed to enhance functionality, improve management, and automate routine tasks.
@@ -14,10 +16,10 @@ error.
 ### qui Cross-Seed Trigger for Starr Apps
 
 -   **Script:** `qui-xseed.sh`
--   **Description:** Triggers a [qui](https://github.com/qui-lern/qui) data-based cross-seed search when Radarr or Sonarr completes an import. The script creates a dir-scan entry in qui, triggers a scan, polls for completion, then cleans up.
+-   **Description:** Triggers a [qui](https://github.com/autobrr/qui) data-based cross-seed search when Radarr or Sonarr completes an import. The script creates a dir-scan entry in qui, triggers a scan, polls for completion, then cleans up.
 -   **Creator:** [Bakerboy448](https://github.com/bakerboy448/)
 -   **Requirements:**
-    -   [qui](https://github.com/qui-lern/qui) with API access enabled
+    -   [qui](https://github.com/autobrr/qui) with API access enabled
     -   Radarr/Sonarr with Custom Script connect support
 -   **Instructions:**
     1. Copy `.env.sample` to `.env` and configure the `QUI_*` variables.
@@ -139,13 +141,15 @@ error.
     1. Copy `.env.sample` to `.env`.
     2. Fill in the required values under "# ZFS Destroy" header.
 
+## Contributing
+
+Issues and pull requests welcome. See the [contributing guidelines](https://github.com/baker-scripts/.github/blob/main/CONTRIBUTING.md); [open an issue](https://github.com/baker-scripts/StarrScripts/issues) to discuss larger changes.
+
 ## Contributors
 
 <a href="https://github.com/baker-scripts/StarrScripts/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=baker-scripts/StarrScripts" alt="Contributors" />
 </a>
-
-Contributions to improve or expand the scripts collection are welcome. Please refer to the [contribution guidelines](https://github.com/baker-scripts/StarrScripts/blob/main/CONTRIBUTING.md) for more information.
 
 ## Disclaimer
 
