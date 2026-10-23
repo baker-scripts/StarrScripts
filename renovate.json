@@ -3,6 +3,7 @@
   "description": "Inlined house Renovate config \u2014 self-contained, public presets only.",
   "extends": [
     "config:best-practices",
+    "github>baker-scripts/.github:renovate-automerge",
     ":dependencyDashboard",
     ":semanticCommits",
     ":enableVulnerabilityAlertsWithLabel(security)"
@@ -18,7 +19,6 @@
   "separateMajorMinor": true,
   "separateMinorPatch": false,
   "automerge": false,
-  "platformAutomerge": false,
   "rebaseWhen": "behind-base-branch",
   "branchPrefix": "renovate/",
   "ignoreDeps": [],
