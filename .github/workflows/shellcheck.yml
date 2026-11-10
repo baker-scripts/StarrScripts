@@ -16,7 +16,7 @@ permissions:
 jobs:
   shellcheck:
     name: Run ShellCheck
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64, hetzner]
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
