@@ -1,0 +1,26 @@
+---
+name: Release
+
+"on":
+  workflow_run:
+    workflows: [Pre-commit, ShellCheck]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: Release
+    if: >-
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.conclusion == 'success'
+    permissions:
+      contents: write
+      actions: read
+    uses: bakerboy448/.github/.github/workflows/release-calver-gated.yml@3f32d193e96c22760f874cc5ae35e0f072e0a173
+    with:
+      sha: ${{ github.event.workflow_run.head_sha }}
+      required_workflows: pre-commit.yml
+      optional_workflows: shellcheck.yml
