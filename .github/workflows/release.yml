@@ -19,7 +19,7 @@ jobs:
     permissions:
       contents: write
       actions: read
-    uses: bakerboy448/.github/.github/workflows/release-calver-gated.yml@3f32d193e96c22760f874cc5ae35e0f072e0a173
+    uses: bakerboy448/.github/.github/workflows/release-calver-gated.yml@48e44fac905a8c374361800bb6f069ba15d88ab4
     with:
       sha: ${{ github.event.workflow_run.head_sha }}
       required_workflows: pre-commit.yml
